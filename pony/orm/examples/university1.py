@@ -46,11 +46,14 @@ params = dict(
     sqlite=dict(provider='sqlite', filename='university1.sqlite', create_db=True),
     mysql=dict(provider='mysql', host="localhost", user="pony", passwd="pony", db="pony"),
     postgres=dict(provider='postgres', user='pony', password='pony', host='localhost', database='pony'),
-    oracle=dict(provider='oracle', user='c##pony', password='pony', dsn='localhost/orcl')
+    oracle=dict(provider='oracle', user='c##pony', password='pony', dsn='localhost/orcl'),
+    cockroach=dict(provider='cockroach', user='root', host='localhost', port=26257, sslmode='disable', database='test1')
 )
-db.bind(**params['sqlite'])
+db.bind(**params['cockroach'])
 
-db.generate_mapping(create_tables=True)
+db.generate_mapping(create_tables=False, check_tables=False)
+db.drop_all_tables(with_all_data=True)
+db.create_tables()
 
 @db_session
 def populate_database():
@@ -179,6 +182,6 @@ def test_queries():
     print_students(students)
 
 
-##if __name__ == '__main__':
-##    populate_database()
-##    test_queries()
+if __name__ == '__main__':
+    populate_database()
+    test_queries()
